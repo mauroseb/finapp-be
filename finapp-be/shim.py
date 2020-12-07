@@ -5,7 +5,9 @@ import socket
 import time
 import json
 from flask import Flask
+
 app = Flask(__name__)
+app.config["DEBUG"] = True
 
 def check_backend():
     return 'success'
@@ -31,21 +33,22 @@ def intraday():
 @app.route('/api/v1/healthcheck')
 def healthcheck():
     """Healthcheck endpoint"""
-    
+
     status = check_backend()
     status_code = 200 if status == 'success' else 500
-    
+
     if 'Cache-Control' not in response.headers:
         response.headers['Cache-Control'] = 'no-store'
-        
+
     data = {
         'hostname': socket.gethostname(),
         'status': status,
         'timestamp': time.time(),
         'results': results,
     }
-    
+
     return Response(json.dumps(data), status=status_code, mimetype='application/json')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
+
