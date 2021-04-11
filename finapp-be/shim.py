@@ -8,6 +8,7 @@ from flask import Flask
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
+version = 0.0.1
 
 def check_backend():
     return 'success'
@@ -15,6 +16,14 @@ def check_backend():
 @app.route("/")
 def main():
     return "<h1>Welcome stranger.</h1>"
+
+@app.route("/version")
+def version():
+    """Return version"""
+    data = {
+        'version': version,
+    }
+    return Response(json.dumps(data), mimetype='application/json')
 
 @app.route('/api/v1/premarket')
 def premarket():
